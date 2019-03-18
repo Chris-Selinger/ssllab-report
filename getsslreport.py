@@ -17,7 +17,7 @@ endpointShell = API + "getEndpointData?host=" + Domain + "&s="
 waitCommand = API + "analyze?host=" + Domain + "&fromCache=off&all=done"
 
 #Function requestWeb : is called whenever the script needs to access ssllabs
-#PARAM : command = the command in which ssl labs will provke
+#PARAM : command = the command in which ssl labs will prvoke
 def requestWeb(command):
     responce = requests.get(command)
     responceData = responce.json()
@@ -30,7 +30,7 @@ data = requestWeb(analyzeCommand)
 while data["status"] != "READY" and data["status"] != "ERROR":
     print("Scan is still in progress")
     time.sleep(10)
-    #Uses wait command to not start a new instance of scan, defeating the purpose of scanning the first place
+    #Uses wait command to not start a new instance of scan, defeating the purpose of scanning in the first place
     data = requestWeb(waitCommand)
 
 #checks list length to see amount of endpoints at current domain so it can check them all
