@@ -17,7 +17,7 @@ endpointShell = API + "getEndpointData?host=" + Domain + "&s="
 waitCommand = API + "analyze?host=" + Domain + "&fromCache=off&all=done"
 
 #Function requestWeb : is called whenever the script needs to access ssllabs
-#PARAM : command = the command in which ssl labs will prvoke
+#PARAM : command = the command in which ssl labs will provoke
 def requestWeb(command):
     responce = requests.get(command)
     responceData = responce.json()
