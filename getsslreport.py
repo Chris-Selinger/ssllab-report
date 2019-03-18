@@ -5,35 +5,46 @@
 
 import requests
 import time
-import sys
-import logging
+
+#Constant section, these will always be the same when using the same API
 
 API = "https://api.ssllabs.com/api/v3/"
 Domain = "www.westjet.com"
+
+#Makes sure to launch a new scan of the current domain, through checking on startNew and checking off fromCache
 analyzeCommand = API + "analyze?host=" + Domain + "&startNew=on&fromCache=off&all=done"
 endpointShell = API + "getEndpointData?host=" + Domain + "&s="
 waitCommand = API + "analyze?host=" + Domain + "&fromCache=off&all=done"
 
-
+#Function requestWeb : is called whenever the script needs to access ssllabs
+#PARAM : command = the command in which ssl labs will provke
 def requestWeb(command):
     responce = requests.get(command)
     responceData = responce.json()
     return responceData
 
+#Access ssllabs in order to get initial data of the domain requested
 data = requestWeb(analyzeCommand)
-while data['status'] != 'READY' and data['status'] != 'ERROR':
+
+#Waits for the analysis of the data to happen, once ready assuming there is no error, it goes on
+while data["status"] != "READY" and data["status"] != "ERROR":
     print("Scan is still in progress")
     time.sleep(10)
+    #Uses wait command to not start a new instance of scan, defeating the purpose of scanning the first place
     data = requestWeb(waitCommand)
-listLength = len(data['endpoints'])
+
+#checks list length to see amount of endpoints at current domain so it can check them all
+listLength = len(data["endpoints"])
 i = 0
+
+#Loop cycles through endpoints, displaying the current IP address being looked at as well as the grade given the address
 while i < listLength:
-    tempEndpoint = data['endpoints']
+    tempEndpoint = data["endpoints"]
     currentEndpoint = tempEndpoint[i]
-    currentIp = currentEndpoint['ipAddress']
-    endpointCommand = endpointShell + currentEndpoint['ipAddress']
+    currentIp = currentEndpoint["ipAddress"]
+    endpointCommand = endpointShell + currentEndpoint["ipAddress"]
     endpointData = requestWeb(endpointCommand)
-    grade = endpointData['grade']
+    grade = endpointData["grade"]
     print("Currently testing IP: " + currentIp)
     print(Domain + "'s SSL grade is: " + grade)
     i =+ 1
